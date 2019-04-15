@@ -1,12 +1,24 @@
 const context = canvas.getContext('2d')
-let image = wx.createImage()
+
 export default class Jumper {
   constructor(){
-    console.log(canvas.width, canvas.height)
-    image.src = 'images/test.jpg'
+    this.x = 0
+    this.y = 0
+    this.imageSrc = 'images/test.jpg'
+    this.drawToCanvas(this.x,this.y)
+  }
+
+  drawToCanvas(x, y){
+    let image = new Image()
+    image.src = this.imageSrc
+
     image.onload = function(){
-        context.drawImage(image,0,0,300,300,0,0,100,100)
-        console.log('ok!',image.width, image.height)
+    context.drawImage(
+      image,
+      x,y,
+      100,100,
+      )
+      console.log('OK!')
     }
   }
 }
