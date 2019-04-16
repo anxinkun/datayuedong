@@ -1,6 +1,8 @@
 import './js/libs/weapp-adapter'
 import './js/libs/symbol'
 
-import TestMain from './js/testmain'
+import Jumper from './js/jumper'
+import Main from './js/main'
 
-new Main()
+new Jumper()
+// new Main()
