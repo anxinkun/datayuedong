@@ -3,7 +3,7 @@ let move_x = []
 let move_y = []
 let delta_t = 1000/60 //帧间隔
 let horizantal = 400 //水平线
-let v = 50
+let v = 150
 
 export default class Jumper {
   constructor(){
@@ -15,8 +15,9 @@ export default class Jumper {
     this.weight = 10 //人物质量，用于实现跳跃逻辑
     this.v = v //跳跃初速度
     this.drawToCanvas(75, horizantal)
-    // this.event_listener(this.isjump, this);
-    this.jumping()
+    this.event_listener(this.isjump, this)
+    setInterval(this.test, delta_t, this)
+    // this.jumping()
     // this.test_sleep()
   }
 
@@ -71,11 +72,23 @@ export default class Jumper {
 
   //跳跃位置的确定
   jumping(){
-    let g = 9.7 //重力加速度
+    let g = 200 //重力加速度
     this.v -= g * delta_t/1000
     this.y = this.y - (this.v * delta_t/1000 - 0.5 * v * delta_t/1000*delta_t/1000)
-    if(this.y < horizantal){
+    console.log(this.v)
+    if(this.y > horizantal){
       this.v = v
+      this.touched = false
+    }
+  }
+
+  test(jumper){
+    if (jumper.isjump(jumper)){
+      jumper.jumping()
+      context.clearRect(0, 0, canvas.width, canvas.height)
+      jumper.drawToCanvas(jumper.x, jumper.y)
+    } else {
+      console.log("Jumping finished.")
     }
   }
 }
