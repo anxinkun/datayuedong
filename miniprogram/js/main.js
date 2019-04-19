@@ -1,244 +1,58 @@
- import Player     from './player/index'
-import Enemy      from './npc/enemy'
-import BackGround from './runtime/background'
-import GameInfo   from './runtime/gameinfo'
-import Music      from './runtime/music'
-import DataBus    from './databus'
+import Jumper from './jumper'
 
-let ctx   = canvas.getContext('2d')
-let databus = new DataBus()
+const context = canvas.getContext('2d')
+window.move_x = []
+window.move_y = []
+window.delta_t = 1000/60 //帧间隔
+window.horizantal = 400 //水平线
+window.v = 150
+window.i = 0
 
-wx.cloud.init()
-const db = wx.cloud.database()
-
-/**
- * 游戏主函数
- */
 export default class Main {
-  constructor() {
-    // 维护当前requestAnimationFrame的id
-    this.aniId    = 0
-    this.personalHighScore = null
-
-    this.restart()
-    this.login()
+  constructor(){
+    let jumper = new Jumper(v)
+    jumper.drawToCanvas(75, horizantal, context)
+    this.event_listener(jumper)
+    setInterval(this.test, delta_t, jumper)
   }
 
-  login() {
-    // 获取 openid
-    wx.cloud.callFunction({
-      name: 'login',
-      success: res => {
-        window.openid = res.result.openid
-        this.prefetchHighScore()
-      },
-      fail: err => {
-        console.error('get openid failed with error', err)
-      }
+  test(jumper){
+    if (jumper.isjump(jumper)){
+      jumper.jumping()
+      jumper.drawToCanvas(jumper.x, jumper.y, context)
+      context.clearRect(0, 0, canvas.width, canvas.height)
+    }
+    if (jumper.islied(jumper) && i < 60){
+      i++
+    } else if (i == 60){
+      i = 0
+      jumper.is_action = false
+    }
+  }
+
+  // 触摸监听
+  event_listener(jumper){
+    wx.onTouchStart(function(e){
+      console.log("start: ", move_x, move_y)
+      move_x = []
+      move_y = []
+      jumper.is_action = true
     })
-  }
-
-  prefetchHighScore() {
-    // 预取历史最高分
-    db.collection('score').doc(`${window.openid}-score`).get()
-      .then(res => {
-        if (this.personalHighScore) {
-          if (res.data.max > this.personalHighScore) {
-            this.personalHighScore = res.data.max
-          }
-        } else {
-          this.personalHighScore = res.data.max
-        }
-      })
-      .catch(err => {
-        console.error('db get score catch error', err)
-        this.prefetchHighScoreFailed = true
-      })
-  }
-
-  restart() {
-    databus.reset()
-
-    canvas.removeEventListener(
-      'touchstart',
-      this.touchHandler
-    )
-
-    this.bg       = new BackGround(ctx)
-    this.player   = new Player(ctx)
-    this.gameinfo = new GameInfo()
-    this.music    = new Music()
-
-    this.bindLoop     = this.loop.bind(this)
-    this.hasEventBind = false
-
-    // 清除上一局的动画
-    window.cancelAnimationFrame(this.aniId);
-
-    this.aniId = window.requestAnimationFrame(
-      this.bindLoop,
-      canvas
-    )
-  }
-
-  /**
-   * 随着帧数变化的敌机生成逻辑
-   * 帧数取模定义成生成的频率
-   */
-  enemyGenerate() {
-    if ( databus.frame % 30 === 0 ) {
-      let enemy = databus.pool.getItemByClass('enemy', Enemy)
-      enemy.init(6)
-      databus.enemys.push(enemy)
-    }
-  }
-
-  // 全局碰撞检测
-  collisionDetection() {
-    let that = this
-
-    databus.bullets.forEach((bullet) => {
-      for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
-        let enemy = databus.enemys[i]
-
-        if ( !enemy.isPlaying && enemy.isCollideWith(bullet) ) {
-          enemy.playAnimation()
-          that.music.playExplosion()
-
-          bullet.visible = false
-          databus.score  += 1
-
-          break
-        }
+    wx.onTouchMove(function(e){
+      if(move_x.length > 3){
+        move_x.shift()
+        move_y.shift()
       }
+      move_x.push(e.touches[0].clientX)
+      move_y.push(e.touches[0].clientY)
     })
-
-    for ( let i = 0, il = databus.enemys.length; i < il;i++ ) {
-      let enemy = databus.enemys[i]
-
-      if ( this.player.isCollideWith(enemy) ) {
-        databus.gameOver = true
-
-        // 获取历史高分
-        if (this.personalHighScore) {
-          if (databus.score > this.personalHighScore) {
-            this.personalHighScore = databus.score
-          }
-        }
-
-        // 上传结果
-        // 调用 uploadScore 云函数
-        wx.cloud.callFunction({
-          name: 'uploadScore',
-          // data 字段的值为传入云函数的第一个参数 event
-          data: {
-            score: databus.score
-          },
-          success: res => {
-            if (this.prefetchHighScoreFailed) {
-              this.prefetchHighScore()
-            }
-          },
-          fail: err => {
-            console.error('upload score failed', err)
-          }
-        })
-
-        break
-      }
-    }
-  }
-
-  // 游戏结束后的触摸事件处理逻辑
-  touchEventHandler(e) {
-     e.preventDefault()
-
-    let x = e.touches[0].clientX
-    let y = e.touches[0].clientY
-
-    let area = this.gameinfo.btnArea
-
-    if (   x >= area.startX
-        && x <= area.endX
-        && y >= area.startY
-        && y <= area.endY  )
-      this.restart()
-  }
-
-  /**
-   * canvas重绘函数
-   * 每一帧重新绘制所有的需要展示的元素
-   */
-  render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    this.bg.render(ctx)
-
-    databus.bullets
-          .concat(databus.enemys)
-          .forEach((item) => {
-              item.drawToCanvas(ctx)
-            })
-
-    this.player.drawToCanvas(ctx)
-
-    databus.animations.forEach((ani) => {
-      if ( ani.isPlaying ) {
-        ani.aniRender(ctx)
-      }
+    wx.onTouchEnd(function(e){
+      console.log("End", jumper.islied(jumper), "Jumper.isaction: ", jumper.is_action)
     })
-
-    this.gameinfo.renderGameScore(ctx, databus.score)
-
-    // 游戏结束停止帧循环
-    if ( databus.gameOver ) {
-      this.gameinfo.renderGameOver(
-        ctx, 
-        databus.score,
-        this.personalHighScore
-      )
-
-      if ( !this.hasEventBind ) {
-        this.hasEventBind = true
-        this.touchHandler = this.touchEventHandler.bind(this)
-        canvas.addEventListener('touchstart', this.touchHandler)
-      }
-    }
-  }
-
-  // 游戏逻辑更新主函数
-  update() {
-    if ( databus.gameOver )
-      return;
-
-    this.bg.update()
-
-    databus.bullets
-           .concat(databus.enemys)
-           .forEach((item) => {
-              item.update()
-            })
-
-    this.enemyGenerate()
-
-    this.collisionDetection()
-
-    if ( databus.frame % 20 === 0 ) {
-      this.player.shoot()
-      this.music.playShoot()
-    }
-  }
-
-  // 实现游戏帧循环
-  loop() {
-    databus.frame++
-
-    this.update()
-    this.render()
-
-    this.aniId = window.requestAnimationFrame(
-      this.bindLoop,
-      canvas
-    )
+    wx.onTouchCancel(function(e){
+      console.log("Cancel: ", e.touches)
+    })
   }
 }
+
+
