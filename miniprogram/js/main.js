@@ -11,54 +11,43 @@ window.delta_t = 1000/60 //帧间隔
 window.horizantal = 400 //水平线
 window.v = 150
 window.i = 0
+let jumper = new Jumper(v)
 
 export default class Main {
   constructor(){
     this.aniId = 0
     this.restart()
-  }
-
-  test(jumper){
-    if (jumper.isjump(jumper)){
-      jumper.jumping()
-      jumper.drawToCanvas(jumper.x, jumper.y, context)
-      context.clearRect(0, 0, canvas.width, canvas.height)
-    }
-    if (jumper.islied(jumper) && i < 60){
-      i++
-    } else if (i == 60){
-      i = 0
-      jumper.is_action = false
-    }
+    this.event_listener = this.event_listener.bind(this)
+    this.event_listener()
   }
 
   // 触摸监听
-  event_listener(jumper){
-    wx.onTouchStart(function(e){
-      console.log("start: ", move_x, move_y)
+  event_listener(){
+    wx.onTouchStart( ((e) => {
+      // console.log("start: ", move_x, move_y)
       move_x = []
       move_y = []
       jumper.is_action = true
-    })
-    wx.onTouchMove(function(e){
+    }).bind(this) )
+
+    wx.onTouchMove( ((e) => {
       if(move_x.length > 3){
         move_x.shift()
         move_y.shift()
       }
       move_x.push(e.touches[0].clientX)
       move_y.push(e.touches[0].clientY)
-    })
-    wx.onTouchEnd(function(e){
-      console.log("End", jumper.islied(jumper), "Jumper.isaction: ", jumper.is_action)
-    })
+    }).bind(this) )
+
+    wx.onTouchEnd( ((e) => {
+    }).bind(this) )
     wx.onTouchCancel(function(e){
-      console.log("Cancel: ", e.touches)
+      // console.log("Cancel: ", e.touches)
     })
   }
 
   restart() {
     databus.reset()
-    this.jumper = new Jumper(v)
     canvas.removeEventListener(
       'touchstart',
       this.touchHandler
@@ -94,15 +83,14 @@ export default class Main {
   render() {
     context.clearRect(0, 0, canvas.width, canvas.height)
 
+    jumper.drawToCanvas(jumper.x, jumper.y, context)
     databus.bullets
       .concat(databus.enemys)
       .forEach((item) => {
         item.drawToCanvas(context)
       })
-    
-    this.jumper.drawToCanvas(75, horizantal, context)
-    this.event_listener(this.jumper)
-    setInterval(this.test, delta_t, this.jumper)
+
+    jumper.drawToCanvas(jumper.x, jumper.y, context)
 
     databus.animations.forEach((ani) => {
       if (ani.isPlaying) {
@@ -118,6 +106,10 @@ export default class Main {
       .forEach((item) => {
         item.update()
       })
+
+      if (jumper.isjump()){
+        jumper.jumping()
+      }
 
     this.enemyGenerate()
   }
