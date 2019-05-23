@@ -9,7 +9,7 @@ export default class Ghost {
     }
     
     drawToCanvas(x, y, context){
-      console.log("drawing")
+      // console.log("drawing")
       let image = new Image()
       image.src = this.image_src
       this.x = x
@@ -20,10 +20,10 @@ export default class Ghost {
         x,y,
         this.width,this.height
         )
-        console.log("In onload.")
-        console.log(this.width, this.height)
+        // console.log("In onload.")
+        // console.log(this.width, this.height)
       }
       image.onload = draw.bind(this)
-      console.log("draw finished")
+      // console.log("draw finished")
     }
 }
