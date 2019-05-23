@@ -4,6 +4,7 @@ import DataBus   from '../databus'
 const ENEMY_IMG_SRC = 'images/enemy.png'
 const ENEMY_WIDTH   = 60
 const ENEMY_HEIGHT  = 60
+window.horizantal = 400 //水平线
 
 const __ = {
   speed: Symbol('speed')
@@ -24,7 +25,7 @@ export default class Enemy extends Animation {
 
   init(speed) {
     this.x = window.innerWidth
-    this.y = rnd(0, window.innerHeight - ENEMY_HEIGHT)
+    this.y = rnd(0, window.horizantal + 100 - ENEMY_HEIGHT)
 
     this[__.speed] = speed
 
