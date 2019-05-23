@@ -13,6 +13,8 @@
 	"projectname": "Data%E8%B7%83%E5%8A%A8",
 	"miniprogramRoot": "miniprogram/",
 	"cloudfunctionRoot": "cloudfunction/",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,
