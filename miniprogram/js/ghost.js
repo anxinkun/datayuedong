@@ -13,10 +13,10 @@ export default class Ghost {
       image.src = this.image_src
       this.x = x
       this.y = y
-        context.drawImage(
-        image,
-        x,y,
-        this.width,this.height
-        )
+      context.drawImage(
+      image,
+      x,y,
+      this.width,this.height
+      )
     }
 }

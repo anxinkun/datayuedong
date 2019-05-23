@@ -48,10 +48,10 @@ export default class Main {
 
   restart() {
     databus.reset()
-    canvas.removeEventListener(
-      'touchstart',
-      this.touchHandler
-    )
+    // canvas.removeEventListener(
+    //   'touchstart',
+    //   this.touchHandler
+    // )
     this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
 
@@ -62,6 +62,18 @@ export default class Main {
       this.bindLoop,
       canvas
     )
+  }
+
+  //碰撞检测
+  colision_detect() {
+    databus.enemys.forEach((item) => {
+      // console.log(item.y)
+      if (item.y - jumper.y < 30 && item.y - jumper.y > -30){
+        if (item.x - jumper.x < 30 && item.x - jumper.x > -30)
+        console.log("mayday! mayday!")
+        jumper.alive = false
+      }
+    })
   }
 
   /**
@@ -84,8 +96,7 @@ export default class Main {
     context.clearRect(0, 0, canvas.width, canvas.height)
 
     jumper.drawToCanvas(jumper.x, jumper.y, context)
-    databus.bullets
-      .concat(databus.enemys)
+    databus.enemys
       .forEach((item) => {
         item.drawToCanvas(context)
       })
@@ -101,8 +112,7 @@ export default class Main {
 
   // 游戏逻辑更新主函数
   update() {
-    databus.bullets
-      .concat(databus.enemys)
+    databus.enemys
       .forEach((item) => {
         item.update()
       })
@@ -117,7 +127,7 @@ export default class Main {
   // 实现游戏帧循环
   loop() {
     databus.frame++
-
+    this.colision_detect()
     this.update()
     this.render()
 
