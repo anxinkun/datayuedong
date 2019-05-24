@@ -11,7 +11,7 @@ window.delta_t = 1000/60 //帧间隔
 window.horizantal = 400 //水平线
 window.v = 150
 window.i = 0
-let jumper = new Jumper(v)
+let jumper = new Jumper()
 
 export default class Main {
   constructor(){
@@ -95,19 +95,22 @@ export default class Main {
   render() {
     context.clearRect(0, 0, canvas.width, canvas.height)
 
-    jumper.drawToCanvas(jumper.x, jumper.y, context)
+    // jumper.drawToCanvas(context)
     databus.enemys
       .forEach((item) => {
         item.drawToCanvas(context)
       })
 
-    jumper.drawToCanvas(jumper.x, jumper.y, context)
+    
+    jumper.play_animation(context)
+    jumper.drawToCanvas(context)
+    
 
-    databus.animations.forEach((ani) => {
-      if (ani.isPlaying) {
-        ani.aniRender(context)
-      }
-    })
+    // databus.animations.forEach((ani) => {
+    //   if (ani.isPlaying) {
+    //     ani.aniRender(context)
+    //   }
+    // })
   }
 
   // 游戏逻辑更新主函数
