@@ -6,16 +6,15 @@ export default class Ghost {
       this.image_src = ''
       this.width = width
       this.height = height
+      this.image = new Image()
+      this.visible = true
     }
     
-    drawToCanvas(x, y, context){
-      let image = new Image()
-      image.src = this.image_src
-      this.x = x
-      this.y = y
+    drawToCanvas(context){
+      this.image.src = this.image_src
       context.drawImage(
-      image,
-      x,y,
+      this.image,
+      this.x,this.y,
       this.width,this.height
       )
     }
