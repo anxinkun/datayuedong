@@ -32,10 +32,18 @@ constructor(){
         this.jump_image_list.push(item)
       })
     }
+    else if(operate === 4){
+      frames.forEach((item) => {
+        this.down_image_list.push(item)
+      })
+    }
+    else {
+      console.log("Err in onload_frames")
+    }
   }
 
   draw_ani(context){
-    this.frame_num ++
+    
     // context.drawImage(
     //   this.image_list[this.frame_num],
     //   this.x, this.y,
@@ -43,21 +51,27 @@ constructor(){
     // )
     // console.log(this)
     if(this.alive){
-      console.log(this.isjump())
-      if(this.isjump()){
+      // console.log(this.isjump())
+      if(this.isjump()) {//跳跃
         if(this.frame_num >= 15){
           this.frame_num = 0
         }
         this.image_src = this.jump_image_list[this.frame_num]
+      } else if(this.islied()) {//蹲伏
+        if(this.frame_num >= 7){
+          this.frame_num = 0
+        }
+        this.image_src = this.down_image_list[this.frame_num]
+        // console.log("lieing!")
       }
       else {
-        if(this.frame_num >= 8){
+        if(this.frame_num >= 8){//跑动
           this.frame_num = 0
         }
         this.image_src = this.running_image_list[this.frame_num]
       }
     } else {
-      if(this.frame_num >= 18){
+      if(this.frame_num >= 18){//死亡
         this.frame_num = 0
       }
       this.image_src = this.dead_image_list[this.frame_num]
@@ -70,6 +84,7 @@ constructor(){
     // console.log("hello?")
     // console.log(this)
     // console.log(this.image_list[this.frame_num])
+    this.frame_num ++
   }
 
   play_animation(context){
