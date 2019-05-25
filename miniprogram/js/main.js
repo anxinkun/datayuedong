@@ -43,6 +43,7 @@ export default class Main {
     }).bind(this) )
 
     wx.onTouchEnd( ((e) => {
+      console.log("touched end")
     }).bind(this) )
     wx.onTouchCancel(function(e){
       // console.log("Cancel: ", e.touches)

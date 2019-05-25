@@ -4,12 +4,15 @@ import Animation from './animation'
 const RUNNING_ANIMATION_SRC = 'images/ProgressBar_Person/Person'
 const DEAD_ANIMATION_SRC = 'images/explosion'
 const JUMP_ANIMATION_SRC = 'images/jump/'
+const DOWN_ANIMATION_SRC = 'images/down/'
 const RUNNING_ANIMATION_COUNT = 9
 const DEAD_ANIMATION_COUNT = 19
 const JUMP_ANIMATION_COUNT = 15
+const DOWN_ANIMATION_COUNT = 7
 const RUNNING_LOAD = 1
 const DEAD_LOAD = 2
 const JUMP_LOAD = 3
+const DOWN_LOAD = 4
 
 
 export default class Jumper extends Animation{
@@ -19,6 +22,7 @@ export default class Jumper extends Animation{
     this.y = horizantal
     this.alive = true //判断人物是否活着
     this.is_action = false //是否触屏幕
+    this.lied_interval = 0 //蹲伏长度
     this.image_src = 'images/test.jpg'  //RUNNING_ANIMATION_SRC + '1.png'  //
     this.weight = 10 //人物质量，用于实现跳跃逻辑
     this.v = v //跳跃初速度
@@ -43,7 +47,13 @@ export default class Jumper extends Animation{
   // 半段蹲伏
   islied(){
     let length = move_x.length
+    console.log(this.is_action)
     if (move_y[length - 1] - move_y[length - 2] > 0 && this.is_action){
+      if(this.lied_interval >= 30){
+        this.lied_interval = 0
+        this.is_action = false
+      }
+      this.lied_interval ++
       return true;
     } else {
       return false;
@@ -66,6 +76,7 @@ export default class Jumper extends Animation{
     this.read_animation_path(RUNNING_LOAD)
     this.read_animation_path(DEAD_LOAD)
     this.read_animation_path(JUMP_LOAD)
+    this.read_animation_path(DOWN_LOAD)
   }
 
   //载入动画路径
@@ -82,6 +93,9 @@ export default class Jumper extends Animation{
     } else if(operator === JUMP_LOAD){
       animation_src = JUMP_ANIMATION_SRC
       animation_count = JUMP_ANIMATION_COUNT
+    } else if(operator === DOWN_LOAD){
+      animation_src = DOWN_ANIMATION_SRC
+      animation_count = DOWN_ANIMATION_COUNT
     }
     for(let i = 1; i < animation_count + 1; i++){
       let frame_path = animation_src + i + '.png'
