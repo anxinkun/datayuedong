@@ -19,6 +19,9 @@ export default class Main {
     this.restart()
     this.event_listener = this.event_listener.bind(this)
     this.event_listener()
+    this.score = 0
+    this.score_update_id = 0
+    this.is_score_updating = false
   }
 
   // 触摸监听
@@ -71,7 +74,7 @@ export default class Main {
       if (item.y - jumper.y < 30 && item.y - jumper.y > -30){
         if (item.x - jumper.x < 30 && item.x - jumper.x > -30)
         console.log("mayday! mayday!")
-        jumper.alive = false
+        // jumper.alive = false
       }
     })
   }
@@ -104,7 +107,7 @@ export default class Main {
     
     jumper.play_animation(context)
     jumper.drawToCanvas(context)
-    
+    this.socre_update()
 
     // databus.animations.forEach((ani) => {
     //   if (ani.isPlaying) {
@@ -123,7 +126,6 @@ export default class Main {
       if (jumper.isjump()){
         jumper.jumping()
       }
-
     this.enemyGenerate()
   }
 
@@ -138,6 +140,23 @@ export default class Main {
       this.bindLoop,
       canvas
     )
+  }
+
+  //实现记分
+  score_update_step(){
+    this.score++
+    console.log(this.score)
+  }
+
+  socre_update(){
+    if(!this.is_score_updating){
+      this.is_score_updating = true
+      this.score_update_id = setInterval(this.score_update_step.bind(this), 1000)
+    }
+    if(!jumper.alive){
+      console.log(jumper)
+      clearInterval(this.score_update_id)
+    }
   }
 }
 
