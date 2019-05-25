@@ -1,8 +1,12 @@
 // import Ghost from './ghost'
 import Animation from './animation'
 
-const ANIMATION_SRC = 'images/ProgressBar_Person/Person'
-const ANIMATION_COUNT = 9
+const RUNNING_ANIMATION_SRC = 'images/ProgressBar_Person/Person'
+const DEAD_ANIMATION_SRC = 'images/explosion'
+const RUNNING_ANIMATION_COUNT = 9
+const DEAD_ANIMATION_COUNT = 19
+const RUNNING_LOAD = 1
+const DEAD_LOAD = 2
 
 
 export default class Jumper extends Animation{
@@ -12,7 +16,7 @@ export default class Jumper extends Animation{
     this.y = horizantal
     this.alive = true //判断人物是否活着
     this.is_action = false //是否触屏幕
-    this.image_src = 'images/test.jpg'  //ANIMATION_SRC + '1.png'  //
+    this.image_src = 'images/test.jpg'  //RUNNING_ANIMATION_SRC + '1.png'  //
     this.weight = 10 //人物质量，用于实现跳跃逻辑
     this.v = v //跳跃初速度
     this.isjump = this.isjump.bind(this)
@@ -54,14 +58,21 @@ export default class Jumper extends Animation{
   }
 
   init_run_frames(){
-    this.frame_count = ANIMATION_COUNT
+    this.frame_count = RUNNING_ANIMATION_COUNT
     let frames = []
-    for(let i = 1; i < ANIMATION_COUNT + 1; i++){
-      let frame_path = ANIMATION_SRC + i + '.png'
+    for(let i = 1; i < RUNNING_ANIMATION_COUNT + 1; i++){
+      let frame_path = RUNNING_ANIMATION_SRC + i + '.png'
       console.log("in init_run_frames: " + frame_path)
       frames.push(frame_path);
     }
-    this.onload_frames(frames)
+    this.onload_frames(frames, RUNNING_LOAD)
+    frames = []
+    for(let i = 1; i < DEAD_ANIMATION_COUNT + 1; i++){
+      let frame_path = DEAD_ANIMATION_SRC + i + '.png'
+      console.log("in init_run_frames: " + frame_path)
+      frames.push(frame_path);
+    }
+    this.onload_frames(frames, DEAD_LOAD)
   }
 
   // initEvent(){
