@@ -1,5 +1,6 @@
 // import Ghost from './ghost'
 import Animation from './animation'
+import Music from './runtime/music'
 
 const RUNNING_ANIMATION_SRC = 'images/ProgressBar_Person/Person'
 const DEAD_ANIMATION_SRC = 'images/explosion'
@@ -13,6 +14,8 @@ const RUNNING_LOAD = 1
 const DEAD_LOAD = 2
 const JUMP_LOAD = 3
 const DOWN_LOAD = 4
+let jumpe_num = 1
+let lied_num = 1 
 
 
 export default class Jumper extends Animation{
@@ -31,6 +34,7 @@ export default class Jumper extends Animation{
     this.visible = true
     console.log(this.image_src)
     this.init_run_frames.bind(this)()
+    this.music = new Music()
     // this.init_animation_map()
   }
 
@@ -38,6 +42,10 @@ export default class Jumper extends Animation{
   isjump(){
     let length = move_x.length
     if (move_y[length - 1] - move_y[length - 2] < 0 && this.is_action){
+      if(jumpe_num==1){
+        this.music.playExplosion()
+        jumpe_num ++
+      }
       return true;
     } else {
       return false;
@@ -53,9 +61,14 @@ export default class Jumper extends Animation{
         this.lied_interval = 0
         this.is_action = false
       }
+      if (lied_num == 1) {
+        this.music.playExplosion()
+        lied_num++
+      }
       this.lied_interval ++
       return true;
     } else {
+      lied_num = 1
       return false;
     }
   }
@@ -66,6 +79,7 @@ export default class Jumper extends Animation{
     this.v -= g * delta_t/1000
     this.y = this.y - (this.v * delta_t/1000 - 0.5 * v * delta_t/1000*delta_t/1000)
     if(this.y > horizantal){
+      jumpe_num = 1
       this.v = v
       this.is_action = false
     }
