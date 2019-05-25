@@ -10,18 +10,26 @@ constructor(){
   this.frame_num = 0
   this.running_image_list = []
   this.dead_image_list = []
+  this.jump_image_list = []
+  this.down_image_list = []
   this.isplaying = false
   this.interval_id = 0
 }
 
+  //加载动画图片路径
   onload_frames(frames, operate){
     if(operate === 1)
       frames.forEach((item) => {
         this.running_image_list.push(item)
       })
-    else {
+    else if(operate === 2){
       frames.forEach((item) => {
         this.dead_image_list.push(item)
+      })
+    }
+    else if(operate === 3){
+      frames.forEach((item) => {
+        this.jump_image_list.push(item)
       })
     }
   }
@@ -35,10 +43,19 @@ constructor(){
     // )
     // console.log(this)
     if(this.alive){
-      if(this.frame_num >= 8){
-        this.frame_num = 0
+      console.log(this.isjump())
+      if(this.isjump()){
+        if(this.frame_num >= 15){
+          this.frame_num = 0
+        }
+        this.image_src = this.jump_image_list[this.frame_num]
       }
-      this.image_src = this.running_image_list[this.frame_num]
+      else {
+        if(this.frame_num >= 8){
+          this.frame_num = 0
+        }
+        this.image_src = this.running_image_list[this.frame_num]
+      }
     } else {
       if(this.frame_num >= 18){
         this.frame_num = 0

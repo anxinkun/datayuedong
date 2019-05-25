@@ -3,10 +3,13 @@ import Animation from './animation'
 
 const RUNNING_ANIMATION_SRC = 'images/ProgressBar_Person/Person'
 const DEAD_ANIMATION_SRC = 'images/explosion'
+const JUMP_ANIMATION_SRC = 'images/jump/'
 const RUNNING_ANIMATION_COUNT = 9
 const DEAD_ANIMATION_COUNT = 19
+const JUMP_ANIMATION_COUNT = 15
 const RUNNING_LOAD = 1
 const DEAD_LOAD = 2
+const JUMP_LOAD = 3
 
 
 export default class Jumper extends Animation{
@@ -23,7 +26,8 @@ export default class Jumper extends Animation{
     this.islied = this.islied.bind(this)
     this.visible = true
     console.log(this.image_src)
-    this.init_run_frames()
+    this.init_run_frames.bind(this)()
+    // this.init_animation_map()
   }
 
   // 判断跳跃
@@ -57,23 +61,43 @@ export default class Jumper extends Animation{
     }
   }
 
+  //加载动画图片
   init_run_frames(){
-    this.frame_count = RUNNING_ANIMATION_COUNT
-    let frames = []
-    for(let i = 1; i < RUNNING_ANIMATION_COUNT + 1; i++){
-      let frame_path = RUNNING_ANIMATION_SRC + i + '.png'
-      console.log("in init_run_frames: " + frame_path)
-      frames.push(frame_path);
-    }
-    this.onload_frames(frames, RUNNING_LOAD)
-    frames = []
-    for(let i = 1; i < DEAD_ANIMATION_COUNT + 1; i++){
-      let frame_path = DEAD_ANIMATION_SRC + i + '.png'
-      console.log("in init_run_frames: " + frame_path)
-      frames.push(frame_path);
-    }
-    this.onload_frames(frames, DEAD_LOAD)
+    this.read_animation_path(RUNNING_LOAD)
+    this.read_animation_path(DEAD_LOAD)
+    this.read_animation_path(JUMP_LOAD)
   }
+
+  //载入动画路径
+  read_animation_path(operator){
+    let animation_src
+    let animation_count
+    let frames = []
+    if(operator === RUNNING_LOAD){
+      animation_src = RUNNING_ANIMATION_SRC
+      animation_count = RUNNING_ANIMATION_COUNT
+    } else if(operator === DEAD_LOAD){
+      animation_src = DEAD_ANIMATION_SRC
+      animation_count = DEAD_ANIMATION_COUNT
+    } else if(operator === JUMP_LOAD){
+      animation_src = JUMP_ANIMATION_SRC
+      animation_count = JUMP_ANIMATION_COUNT
+    }
+    for(let i = 1; i < animation_count + 1; i++){
+      let frame_path = animation_src + i + '.png'
+      console.log("in init_run_frames: " + frame_path)
+      frames.push(frame_path);
+    }
+    this.onload_frames(frames, operator)
+  }
+
+  // init_animation_map(){
+  //   this.animation_map = [
+  //     RUNNING_ANIMATION_SRC,
+  //     DEAD_ANIMATION_SRC,
+
+  //   ]
+  // }
 
   // initEvent(){
   //   canvas.addEventListener('touch_start', ((e) => {
