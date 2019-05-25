@@ -74,7 +74,7 @@ export default class Main {
       if (item.y - jumper.y < 30 && item.y - jumper.y > -30){
         if (item.x - jumper.x < 30 && item.x - jumper.x > -30)
         console.log("mayday! mayday!")
-        // jumper.alive = false
+        jumper.alive = false
       }
     })
   }
