@@ -35,19 +35,20 @@ constructor(){
     // )
     // console.log(this)
     if(this.alive){
+      if(this.frame_num >= 8){
+        this.frame_num = 0
+      }
       this.image_src = this.running_image_list[this.frame_num]
-      if(this.frame_num == 8){
-        this.frame_num = 0
-      }
     } else {
-      this.image_src = this.dead_image_list[this.frame_num]
-      if(this.frame_num == 18){
+      if(this.frame_num >= 18){
         this.frame_num = 0
       }
+      this.image_src = this.dead_image_list[this.frame_num]
     }
     if(this.frame_num > 19){
       console.log("Err in draw_ani")
     }
+    // console.log(this.alive)
     // console.log("width: " + this.width + " height: " + this.height)
     // console.log("hello?")
     // console.log(this)

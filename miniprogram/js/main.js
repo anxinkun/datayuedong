@@ -71,10 +71,11 @@ export default class Main {
   colision_detect() {
     databus.enemys.forEach((item) => {
       // console.log(item.y)
-      if (item.y - jumper.y < 30 && item.y - jumper.y > -30){
-        if (item.x - jumper.x < 30 && item.x - jumper.x > -30)
-        console.log("mayday! mayday!")
-        jumper.alive = false
+      if (item.y + 30 - (jumper.y + 50) < 80 && item.y + 30 - (jumper.y + 50) > -80){
+        if (item.x + 30 - (jumper.x + 50) < 80 && item.x + 30 - (jumper.x + 50) > -80){
+          console.log("mayday! mayday!")
+          jumper.alive = false
+        }
       }
     })
   }
@@ -132,6 +133,7 @@ export default class Main {
   // 实现游戏帧循环
   loop() {
     databus.frame++
+    jumper.alive = true
     this.colision_detect()
     this.update()
     this.render()
@@ -154,7 +156,7 @@ export default class Main {
       this.score_update_id = setInterval(this.score_update_step.bind(this), 1000)
     }
     if(!jumper.alive){
-      console.log(jumper)
+      // console.log(jumper)
       clearInterval(this.score_update_id)
     }
   }
