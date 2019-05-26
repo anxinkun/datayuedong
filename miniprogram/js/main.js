@@ -1,6 +1,7 @@
 import Jumper from './jumper'
 import Enemy from './npc/enemy'
 import DataBus from './databus'
+import GameInfo from './runtime/gameinfo'
 
 let databus = new DataBus()
 
@@ -11,7 +12,6 @@ window.delta_t = 1000/60 //帧间隔
 window.horizantal = 400 //水平线
 window.v = 150
 window.i = 0
-let jumper = new Jumper()
 
 export default class Main {
   constructor(){
@@ -30,7 +30,7 @@ export default class Main {
       // console.log("start: ", move_x, move_y)
       move_x = []
       move_y = []
-      jumper.is_action = true
+      this.jumper.is_action = true
     }).bind(this) )
 
     wx.onTouchMove( ((e) => {
@@ -52,10 +52,12 @@ export default class Main {
 
   restart() {
     databus.reset()
-    // canvas.removeEventListener(
-    //   'touchstart',
-    //   this.touchHandler
-    // )
+    canvas.removeEventListener(
+      'touchstart',
+       this.touchHandler
+    )
+    this.jumper = new Jumper()
+    this.gameinfo = new GameInfo()
     this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
 
@@ -72,10 +74,10 @@ export default class Main {
   colision_detect() {
     databus.enemys.forEach((item) => {
       // console.log(item.y)
-      if (item.y + 30 - (jumper.y + 50) < 80 && item.y + 30 - (jumper.y + 50) > -80){
-        if (item.x + 30 - (jumper.x + 50) < 80 && item.x + 30 - (jumper.x + 50) > -80){
+      if (item.y + 30 - (this.jumper.y + 50) < 80 && item.y + 30 - (this.jumper.y + 50) > -80){
+        if (item.x + 30 - (this.jumper.x + 50) < 80 && item.x + 30 - (this.jumper.x + 50) > -80){
           console.log("mayday! mayday!")
-          jumper.alive = false
+          this.jumper.alive = false
         }
       }
     })
@@ -107,9 +109,23 @@ export default class Main {
       })
 
     
-    jumper.play_animation(context)
-    jumper.drawToCanvas(context)
+    this.jumper.play_animation(context)
+    this.jumper.drawToCanvas(context)
     this.socre_update()
+
+    if (!this.jumper.alive) {
+      this.gameinfo.renderGameOver(
+        context,
+        0,
+        0
+      )
+
+      if (!this.hasEventBind) {
+        this.hasEventBind = true
+        this.touchHandler = this.touchEventHandler.bind(this)
+        canvas.addEventListener('touchstart', this.touchHandler)
+      }
+    }
 
     // databus.animations.forEach((ani) => {
     //   if (ani.isPlaying) {
@@ -120,22 +136,40 @@ export default class Main {
 
   // 游戏逻辑更新主函数
   update() {
+    if (!this.jumper.alive)
+      return;
     databus.enemys
       .forEach((item) => {
         item.update()
       })
 
-      if (jumper.isjump()){
-        jumper.jumping()
+      if (this.jumper.isjump()){
+        this.jumper.jumping()
       }
     this.enemyGenerate()
+    this.colision_detect()
+  }
+
+  // 游戏结束后的触摸事件处理逻辑
+  touchEventHandler(e) {
+    e.preventDefault()
+
+    let x = e.touches[0].clientX
+    let y = e.touches[0].clientY
+
+    let area = this.gameinfo.btnArea
+
+    if (x >= area.startX
+      && x <= area.endX
+      && y >= area.startY
+      && y <= area.endY)
+      this.restart()
   }
 
   // 实现游戏帧循环
   loop() {
     databus.frame++
-    jumper.alive = true
-    this.colision_detect()
+
     this.update()
     this.render()
 
@@ -156,7 +190,7 @@ export default class Main {
       this.is_score_updating = true
       this.score_update_id = setInterval(this.score_update_step.bind(this), 1000)
     }
-    if(!jumper.alive){
+    if(!this.jumper.alive){
       // console.log(jumper)
       clearInterval(this.score_update_id)
     }
