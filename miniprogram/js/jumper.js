@@ -14,13 +14,13 @@ const RUNNING_LOAD = 1
 const DEAD_LOAD = 2
 const JUMP_LOAD = 3
 const DOWN_LOAD = 4
-let jumpe_num = 1
-let lied_num = 1 
 
 
 export default class Jumper extends Animation{
   constructor(){
     super(100, 100)
+    this.jumpe_num = 1
+    this.lied_num = 1 
     this.x = 75
     this.y = horizantal
     this.alive = true //判断人物是否活着
@@ -42,9 +42,9 @@ export default class Jumper extends Animation{
   isjump(){
     let length = move_x.length
     if (move_y[length - 1] - move_y[length - 2] < 0 && this.is_action){
-      if(jumpe_num==1){
+      if (this.jumpe_num==1){
         this.music.playExplosion()
-        jumpe_num ++
+        this.jumpe_num ++
       }
       return true;
     } else {
@@ -57,18 +57,19 @@ export default class Jumper extends Animation{
     let length = move_x.length
     console.log(this.is_action)
     if (move_y[length - 1] - move_y[length - 2] > 0 && this.is_action){
+      if (this.lied_num == 1) {
+        this.music.playExplosion()
+        this.lied_num ++
+      }
+      console.log(this.lied_num)
       if(this.lied_interval >= 30){
         this.lied_interval = 0
         this.is_action = false
-      }
-      if (lied_num == 1) {
-        this.music.playExplosion()
-        lied_num++
+        this.lied_num = 1
       }
       this.lied_interval ++
       return true;
     } else {
-      lied_num = 1
       return false;
     }
   }
@@ -79,9 +80,9 @@ export default class Jumper extends Animation{
     this.v -= g * delta_t/1000
     this.y = this.y - (this.v * delta_t/1000 - 0.5 * v * delta_t/1000*delta_t/1000)
     if(this.y > horizantal){
-      jumpe_num = 1
       this.v = v
       this.is_action = false
+      this.jumpe_num = 1
     }
   }
 
