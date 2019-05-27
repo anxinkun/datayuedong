@@ -113,6 +113,8 @@ export default class Main {
     this.jumper.drawToCanvas(context)
     this.socre_update()
 
+    this.gameinfo.renderGameScore(context, this.score)
+
     if (!this.jumper.alive) {
       this.gameinfo.renderGameOver(
         context,
@@ -192,6 +194,7 @@ export default class Main {
     }
     if(!this.jumper.alive){
       // console.log(jumper)
+      this.is_score_updating = false
       clearInterval(this.score_update_id)
     }
   }
