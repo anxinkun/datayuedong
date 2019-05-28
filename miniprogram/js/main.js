@@ -4,6 +4,8 @@ import DataBus from './databus'
 import GameInfo from './runtime/gameinfo'
 
 let databus = new DataBus()
+wx.cloud.init()
+const db = wx.cloud.database()
 
 const context = canvas.getContext('2d')
 window.move_x = []
@@ -21,9 +23,19 @@ export default class Main {
     this.event_listener()
     this.score = 0
     this.score_update_id = 0
+    this.maxscore = 0
     this.is_score_updating = false
+    this.openid = 0
+    wx.cloud.callFunction({
+      name: 'login',
+      success: res => {
+        this.openid = res.result.openid
+      },
+      fail: err => {
+        console.error('get openid failed with error', err)
+      }
+    })
   }
-
   // 触摸监听
   event_listener(){
     wx.onTouchStart( ((e) => {
@@ -78,6 +90,29 @@ export default class Main {
         if (item.x + 30 - (this.jumper.x + 50) < 80 && item.x + 30 - (this.jumper.x + 50) > -80){
           console.log("mayday! mayday!")
           this.jumper.alive = false
+          wx.cloud.callFunction({
+        name: 'add',
+        // data 字段的值为传入云函数的第一个参数 event
+        data: {
+          score: this.score
+        },
+        success: res => {
+          console.log(res)
+        },
+        fail: err => {
+          console.error(err)
+        }
+      })
+    db.collection('User').doc(this.openid).field({
+        score: true
+      }).get()
+        .then(res => {
+              // res.data 包含该记录的数据
+          if (this.score < res.data.score)  
+            this.maxscore = res.data.score
+          else
+            this.maxscore = this.score
+        })
         }
       }
     })
@@ -116,8 +151,8 @@ export default class Main {
     if (!this.jumper.alive) {
       this.gameinfo.renderGameOver(
         context,
-        0,
-        0
+        this.score,
+        this.maxscore
       )
 
       if (!this.hasEventBind) {
@@ -193,6 +228,28 @@ export default class Main {
     if(!this.jumper.alive){
       // console.log(jumper)
       clearInterval(this.score_update_id)
+      // wx.cloud.callFunction({
+      //   name: 'add',
+      //   // data 字段的值为传入云函数的第一个参数 event
+      //   data: {
+      //     score: this.score
+      //   },
+      //   success: res => {
+      //     console.log(res)
+      //   },
+      //   fail: err => {
+      //     console.error('upload score failed', err)
+      //   }
+      // })
+    // db.collection('User').doc(this.openid).field({
+    //     score: true
+    //   }).get()
+    //     .then(res => {
+    //           // res.data 包含该记录的数据
+    //      this.maxscore = res.data.score
+    //     })
+
+
     }
   }
 }

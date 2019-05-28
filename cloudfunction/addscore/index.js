@@ -3,16 +3,18 @@ const cloud = require('wx-server-sdk')
 
 // 与小程序端一致，均需调用 init 方法初始化
 cloud.init()
+
 // 可在入口函数外缓存 db 对象
 const db = cloud.database()
 
 // 数据库查询更新指令对象
 const _ = db.command
+// wx.cloud = false
 
 // 云函数入口函数
 exports.main = async (event, context) => {
 
-  // 以 openid 作为记录 id
+  // 以 openid-score 作为记录 id
   const docId = `${event.userInfo.openId}`
 
   let userRecord
@@ -20,7 +22,7 @@ exports.main = async (event, context) => {
   try {
     const querResult = await db.collection('User').doc(docId).get()
     userRecord = querResult.data
-  } catch (error) {
+  } catch (err) {
     // 用户第一次上传分数
   }
 
@@ -32,12 +34,10 @@ exports.main = async (event, context) => {
       maxScore = userRecord.score
     }
 
-
     const updateResult = await db.collection('User').doc(docId).update({
       data: {
-        score: maxScore,
-
-
+        // _.push 指往 scores 数组字段尾部添加一个记录，该操作为原子操作
+        score: maxScore
       }
     })
 
@@ -60,9 +60,9 @@ exports.main = async (event, context) => {
       data: {
         // 这里指定了 _id，如果不指定，数据库会默认生成一个
         _id: docId,
-        // 这里指定了 _openid，因在云函数端创建的记录不会默认插入用户 openid，如果是在小程序端创建的记录，会默认插入 _openid 字段
         // 分数历史
         score: [event.score],
+        // 缓存最大值
       }
     })
 
