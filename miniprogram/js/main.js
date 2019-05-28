@@ -2,6 +2,7 @@ import Jumper from './jumper'
 import Enemy from './npc/enemy'
 import DataBus from './databus'
 import GameInfo from './runtime/gameinfo'
+import Background from './background';
 
 let databus = new DataBus()
 wx.cloud.init()
@@ -72,6 +73,8 @@ export default class Main {
     this.gameinfo = new GameInfo()
     this.bindLoop = this.loop.bind(this)
     this.hasEventBind = false
+    this.score = 0
+    this.bg = new Background()
 
     // 清除上一局的动画
     window.cancelAnimationFrame(this.aniId);
@@ -137,6 +140,8 @@ export default class Main {
   render() {
     context.clearRect(0, 0, canvas.width, canvas.height)
 
+    this.bg.render(context)
+
     // jumper.drawToCanvas(context)
     databus.enemys
       .forEach((item) => {
@@ -173,16 +178,18 @@ export default class Main {
 
   // 游戏逻辑更新主函数
   update() {
-    if (!this.jumper.alive)
+    if (!this.jumper.alive){
       return;
+    }
+    this.bg.update()
     databus.enemys
       .forEach((item) => {
         item.update()
       })
 
-      if (this.jumper.isjump()){
-        this.jumper.jumping()
-      }
+    if (this.jumper.isjump()){
+      this.jumper.jumping()
+    }
     this.enemyGenerate()
     this.colision_detect()
   }
