@@ -55,7 +55,7 @@ export default class Jumper extends Animation{
   // 半段蹲伏
   islied(){
     let length = move_x.length
-    console.log(this.is_action)
+    // console.log(this.is_action)
     if (move_y[length - 1] - move_y[length - 2] > 0 && this.is_action){
       if (this.lied_num == 1) {
         this.music.playExplosion()
@@ -119,21 +119,4 @@ export default class Jumper extends Animation{
     }
     this.onload_frames(frames, operator)
   }
-
-  // init_animation_map(){
-  //   this.animation_map = [
-  //     RUNNING_ANIMATION_SRC,
-  //     DEAD_ANIMATION_SRC,
-
-  //   ]
-  // }
-
-  // initEvent(){
-  //   canvas.addEventListener('touch_start', ((e) => {
-  //     e.preventDefault()
-  //     this.is_action = true
-  //   }).bind(this))
-
-  //   canvas.addEventListener('touche')
-  // }
 }

@@ -29,7 +29,7 @@ export default class Background extends Ghost{
   }
 
   render(context){
-    console.log(this)
+    // console.log(this)
     context.drawImage(
       this.image,
       0,0,
