@@ -4,7 +4,7 @@ import Music from './runtime/music'
 
 const RUNNING_ANIMATION_SRC = 'images/ProgressBar_Person/Person'
 const DEAD_ANIMATION_SRC = 'images/explosion'
-const JUMP_ANIMATION_SRC = 'images/jump/'
+const JUMP_ANIMATION_SRC = 'images/jump/jump'
 const DOWN_ANIMATION_SRC = 'images/down/'
 const RUNNING_ANIMATION_COUNT = 9
 const DEAD_ANIMATION_COUNT = 19
