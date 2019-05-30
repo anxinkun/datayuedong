@@ -155,7 +155,6 @@ export default class Main {
     
     this.jumper.play_animation(context)
     this.jumper.drawToCanvas(context)
-    this.socre_update()
 
     this.gameinfo.renderGameScore(context, this.score)
 
@@ -190,6 +189,7 @@ export default class Main {
       return;
     }
     this.bg.update()
+    this.socre_update()
     databus.enemys
       .forEach((item) => {
         item.update()
