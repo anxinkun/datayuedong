@@ -1,5 +1,5 @@
 // import Ghost from './ghost'
-import Animation from './animation'
+import JumperAnimation from './jumper_animation'
 import Music from './runtime/music'
 
 const RUNNING_ANIMATION_SRC = 'images/ProgressBar_Person/Person'
@@ -16,7 +16,7 @@ const JUMP_LOAD = 3
 const DOWN_LOAD = 4
 
 
-export default class Jumper extends Animation{
+export default class Jumper extends JumperAnimation{
   constructor(){
     super(100, 100)
     this.jumpe_num = 1
