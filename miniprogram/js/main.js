@@ -149,6 +149,7 @@ export default class Main {
     // jumper.drawToCanvas(context)
     databus.enemys
       .forEach((item) => {
+        item.play_animation(context)
         item.drawToCanvas(context)
       })
 
@@ -186,6 +187,10 @@ export default class Main {
   // 游戏逻辑更新主函数
   update() {
     if (!this.jumper.alive || this.isstart == false){// || this.isstart == false
+      if(this.is_score_updating){
+        this.is_score_updating = false
+        clearInterval(this.score_update_id)
+      }
       return;
     }
     this.bg.update()

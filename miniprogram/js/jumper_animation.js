@@ -3,7 +3,7 @@ import Ghost from './ghost'
 
 // datebus = new DataBus
 
-export default class Animation extends Ghost{
+export default class JumperAnimation extends Ghost{
 constructor(){
   super(100, 100)
   this.frame_count = 0
@@ -40,6 +40,7 @@ constructor(){
     else {
       console.log("Err in onload_frames")
     }
+    
   }
 
   draw_ani(context){
