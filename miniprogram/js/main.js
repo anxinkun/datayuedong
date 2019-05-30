@@ -159,7 +159,7 @@ export default class Main {
     this.gameinfo.renderGameScore(context, this.score)
 
     if(!this.isstart){
-      console.log("Now we begin to start it.")
+      // console.log("Now we begin to start it.")
       this.startgame.render_start_game(context)
       if(!this.has_start_event){
         this.has_start_event = true

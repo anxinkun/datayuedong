@@ -1,8 +1,8 @@
 import Ghost from "./ghost";
 
-const IMAGE_SRC = "images/background.jpg"
-const IMAGE_WIDTH = 430
-const IMAGE_HEIGHT = 508
+const IMAGE_SRC = "images/back"
+const IMAGE_WIDTH = 890
+const IMAGE_HEIGHT = 600
 
 export default class Background extends Ghost{
   constructor(){
@@ -10,40 +10,55 @@ export default class Background extends Ghost{
     this.visible = true
     this.x = 0
     this.y = 0
-    this.image = new Image()
-    this.image.src = IMAGE_SRC
-    this.end = IMAGE_WIDTH //背景的最右段，为了循环播放
-    console.log(this.image.width)
-    console.log(this.image.height)
-    console.log(window.innerHeight)
-    console.log(window.innerWidth)
+    this.image1 = new Image()
+    this.image2 = new Image()
+    this.image1.src = IMAGE_SRC + '1.jpg'
+    this.image2.src = IMAGE_SRC + '2.jpg'
+    this.which_order = true
+    this.end = 0 //背景的最右段，为了循环播放
+    // console.log(this.image.width)
+    // console.log(this.image.height)
+    // console.log(window.innerHeight)
+    // console.log(window.innerWidth)
   }
 
   //更新背景
   update(){
-    if(this.end > 0){
+    if(this.end > -IMAGE_WIDTH){
       this.end --
     } else {
-      this.end = IMAGE_WIDTH
+      if(this.which_order){
+        this.which_order = false
+        this.image1.src = IMAGE_SRC + '2.jpg'
+        this.image2.src = IMAGE_SRC + '1.jpg'
+      }
+      else {
+        this.which_order = true
+        this.image1.src = IMAGE_SRC + '1.jpg'
+        this.image2.src = IMAGE_SRC + '2.jpg'
+      }
+      console.log(this.image1);
+      this.end = 0
     }
   }
 
   render(context){
-    // console.log(this)
+    
+    // console.log(this.image)
     context.drawImage(
-      this.image,
+      this.image1,
       0,0,
-      this.width, this.height,
-      this.end - window.innerWidth, 40,
-      window.innerWidth, window.innerHeight
+      IMAGE_WIDTH, IMAGE_HEIGHT,
+      this.end, 25,
+      IMAGE_WIDTH, IMAGE_HEIGHT
     )
-
+    
     context.drawImage(
-      this.image,
+      this.image2,
       0,0,
-      this.width, this.height,
-      this.end, 40,
-      window.innerWidth, window.innerHeight
+      IMAGE_WIDTH, IMAGE_HEIGHT,
+      this.end + IMAGE_WIDTH, 25,
+      IMAGE_WIDTH, IMAGE_HEIGHT
     )
   }
 }
