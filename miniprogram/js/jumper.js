@@ -29,10 +29,10 @@ export default class Jumper extends JumperAnimation{
     this.image_src = 'images/test.jpg'  //RUNNING_ANIMATION_SRC + '1.png'  //
     this.weight = 10 //人物质量，用于实现跳跃逻辑
     this.v = v //跳跃初速度
+    this.islieing = false
     this.isjump = this.isjump.bind(this)
     this.islied = this.islied.bind(this)
     this.visible = true
-    console.log(this.image_src)
     this.init_run_frames.bind(this)()
     this.music = new Music()
     // this.init_animation_map()
@@ -55,13 +55,14 @@ export default class Jumper extends JumperAnimation{
   // 半段蹲伏
   islied(){
     let length = move_x.length
-    // console.log(this.is_action)
     if (move_y[length - 1] - move_y[length - 2] > 0 && this.is_action){
+      if(this.y < window.horizantal){
+        this.islieing = true
+      }
       if (this.lied_num == 1) {
         this.music.playExplosion()
         this.lied_num ++
       }
-      console.log(this.lied_num)
       if(this.lied_interval >= 30){
         this.lied_interval = 0
         this.is_action = false
@@ -74,9 +75,16 @@ export default class Jumper extends JumperAnimation{
     }
   }
 
+  lieing(){
+    this.y += 5
+    if(this.y >= window.horizantal){
+      this.islieing = false
+    }
+  }
+
   //跳跃位置的确定
   jumping(){
-    let g = 200 //重力加速度
+    let g = 450 //重力加速度
     this.v -= g * delta_t/1000
     this.y = this.y - (this.v * delta_t/1000 - 0.5 * v * delta_t/1000*delta_t/1000)
     if(this.y > horizantal){
@@ -114,7 +122,6 @@ export default class Jumper extends JumperAnimation{
     }
     for(let i = 1; i < animation_count + 1; i++){
       let frame_path = animation_src + i + '.png'
-      console.log("in init_run_frames: " + frame_path)
       frames.push(frame_path);
     }
     this.onload_frames(frames, operator)

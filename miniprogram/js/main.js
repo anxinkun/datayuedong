@@ -14,13 +14,13 @@ window.move_x = []
 window.move_y = []
 window.delta_t = 1000/60 //帧间隔
 window.horizantal = 400 //水平线
-window.v = 150
+window.v = 400
 window.i = 0
 
 export default class Main {
   constructor(){
     this.aniId = 0
-    this.restart()
+    this.restart.bind(this)()
     this.event_listener = this.event_listener.bind(this)
     this.event_listener()
     this.score = 0
@@ -81,19 +81,20 @@ export default class Main {
     this.startgame = new StartGame()
 
     // 清除上一局的动画
-    window.cancelAnimationFrame(this.aniId);
+    cancelAnimationFrame(this.aniId);
 
-    this.aniId = window.requestAnimationFrame(
-      this.bindLoop,
-      canvas
-    )
+    // this.aniId = window.requestAnimationFrame(
+    //   this.bindLoop,
+    //   canvas
+    // )
+    this.aniId = requestAnimationFrame(this.bindLoop)
   }
 
   //碰撞检测
   colision_detect() {
     databus.enemys.forEach((item) => {
-      if (item.y + 30 - (this.jumper.y + 50) < 80 && item.y + 30 - (this.jumper.y + 50) > -80){
-        if (item.x + 30 - (this.jumper.x + 50) < 80 && item.x + 30 - (this.jumper.x + 50) > -80){
+      if (item.y + 30 - (this.jumper.y + 50) < 40 && item.y + 30 - (this.jumper.y + 50) > -40){
+        if (item.x + 30 - (this.jumper.x + 50) < 40 && item.x + 30 - (this.jumper.x + 50) > -40){
           console.log("mayday! mayday!")
           this.jumper.alive = false
           wx.cloud.callFunction({
@@ -203,6 +204,9 @@ export default class Main {
     if (this.jumper.isjump()){
       this.jumper.jumping()
     }
+    if(this.jumper.islieing){
+      this.jumper.lieing()
+    }
     this.enemyGenerate()
     this.colision_detect()
   }
@@ -246,10 +250,11 @@ export default class Main {
     this.update()
     this.render()
 
-    this.aniId = window.requestAnimationFrame(
-      this.bindLoop,
-      canvas
-    )
+    // this.aniId = window.requestAnimationFrame(
+    //   this.bindLoop,
+    //   canvas
+    // )
+    this.aniId = requestAnimationFrame(this.bindLoop)
   }
 
   //实现记分
