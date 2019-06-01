@@ -43,7 +43,7 @@ export default class Jumper extends JumperAnimation{
     let length = move_x.length
     if (move_y[length - 1] - move_y[length - 2] < 0 && this.is_action){
       if (this.jumpe_num==1){
-        this.music.playExplosion()
+        this.music.playJumpe()
         this.jumpe_num ++
       }
       return true;
@@ -60,7 +60,7 @@ export default class Jumper extends JumperAnimation{
         this.islieing = true
       }
       if (this.lied_num == 1) {
-        this.music.playExplosion()
+        this.music.playLie()
         this.lied_num ++
       }
       if(this.lied_interval >= 30){

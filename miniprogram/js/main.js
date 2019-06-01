@@ -171,17 +171,19 @@ export default class Main {
     }
 
     if (!this.jumper.alive) {
-      this.gameinfo.renderGameOver(
-        context,
-        this.score,
-        this.maxscore
-      )
-
-      if (!this.hasEventBind) {
-        this.hasEventBind = true
-        this.touchHandler = this.touchEventHandler.bind(this)
-        canvas.addEventListener('touchstart', this.touchHandler)
-      }
+      let that = this
+      setTimeout(function () {
+        that.gameinfo.renderGameOver(
+          context,
+          that.score,
+          that.maxscore
+        )
+        if (!that.hasEventBind) {
+          that.hasEventBind = true
+          that.touchHandler = that.touchEventHandler.bind(that)
+          canvas.addEventListener('touchstart', that.touchHandler)
+        }
+      }, 1000)
     }
   }
 
@@ -245,6 +247,10 @@ export default class Main {
 
   // 实现游戏帧循环
   loop() {
+    //人物死亡后停止帧循环
+    if(!this.jumper.alive){
+      return;
+    }
     databus.frame++
 
     this.update()
