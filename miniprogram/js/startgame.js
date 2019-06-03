@@ -1,12 +1,12 @@
-const IMAGE_SRC = 'images/start.jpg'
-const IMAGE_SRC_X = 180
-const IMAGE_SRC_Y = 250
-const IMAGE_SRC_WIDTH = 450
-const IMAGE_SRC_HEIGHT = 140
-const IMAGE_X = window.innerWidth/2 - 100
+const IMAGE_SRC = 'images/start_button.png'
+const IMAGE_SRC_X = 0
+const IMAGE_SRC_Y = 0
+const IMAGE_SRC_WIDTH = 349
+const IMAGE_SRC_HEIGHT = 260
+const IMAGE_X = window.innerWidth/2 - IMAGE_SRC_WIDTH/2 + 50
 const IMAGE_Y = window.innerHeight/2
-const IMAGE_WIDTH = 200
-const IMAGE_HEIGHT = 75
+const IMAGE_WIDTH = IMAGE_SRC_WIDTH
+const IMAGE_HEIGHT = IMAGE_SRC_HEIGHT
 
 let image = new Image()
 image.src = IMAGE_SRC
