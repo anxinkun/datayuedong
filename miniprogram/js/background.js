@@ -16,10 +16,6 @@ export default class Background extends Ghost{
     this.image2.src = IMAGE_SRC + '2.jpg'
     this.which_order = true
     this.end = 0 //背景的最右段，为了循环播放
-    // console.log(this.image.width)
-    // console.log(this.image.height)
-    // console.log(window.innerHeight)
-    // console.log(window.innerWidth)
   }
 
   //更新背景
@@ -37,14 +33,11 @@ export default class Background extends Ghost{
         this.image1.src = IMAGE_SRC + '1.jpg'
         this.image2.src = IMAGE_SRC + '2.jpg'
       }
-      console.log(this.image1);
       this.end = 0
     }
   }
 
   render(context){
-    
-    // console.log(this.image)
     context.drawImage(
       this.image1,
       0,0,

@@ -7,7 +7,7 @@ const DEAD_ANIMATION_SRC = 'images/dead/'
 const JUMP_ANIMATION_SRC = 'images/jump/jump'
 const DOWN_ANIMATION_SRC = 'images/down/'
 const RUNNING_ANIMATION_COUNT = 9
-const DEAD_ANIMATION_COUNT = 19
+const DEAD_ANIMATION_COUNT = 17
 const JUMP_ANIMATION_COUNT = 15
 const DOWN_ANIMATION_COUNT = 20
 const RUNNING_LOAD = 1
@@ -77,6 +77,7 @@ export default class Jumper extends JumperAnimation{
 
   lieing(){
     this.y += 5
+    this.v = v
     if(this.y >= window.horizantal){
       this.islieing = false
     }
@@ -87,7 +88,7 @@ export default class Jumper extends JumperAnimation{
     let g = 450 //重力加速度
     this.v -= g * delta_t/1000
     this.y = this.y - (this.v * delta_t/1000 - 0.5 * v * delta_t/1000*delta_t/1000)
-    if(this.y > horizantal){
+    if(this.y >= horizantal){
       this.v = v
       this.is_action = false
       this.jumpe_num = 1
