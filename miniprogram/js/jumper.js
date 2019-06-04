@@ -3,13 +3,13 @@ import JumperAnimation from './jumper_animation'
 import Music from './runtime/music'
 
 const RUNNING_ANIMATION_SRC = 'images/ProgressBar_Person/Person'
-const DEAD_ANIMATION_SRC = 'images/explosion'
+const DEAD_ANIMATION_SRC = 'images/dead/'
 const JUMP_ANIMATION_SRC = 'images/jump/jump'
 const DOWN_ANIMATION_SRC = 'images/down/'
 const RUNNING_ANIMATION_COUNT = 9
 const DEAD_ANIMATION_COUNT = 19
 const JUMP_ANIMATION_COUNT = 15
-const DOWN_ANIMATION_COUNT = 7
+const DOWN_ANIMATION_COUNT = 20
 const RUNNING_LOAD = 1
 const DEAD_LOAD = 2
 const JUMP_LOAD = 3
