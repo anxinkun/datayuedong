@@ -44,15 +44,7 @@ constructor(){
   }
 
   draw_ani(context){
-    
-    // context.drawImage(
-    //   this.image_list[this.frame_num],
-    //   this.x, this.y,
-    //   this.width, this.height
-    // )
-    // console.log(this)
     if(this.alive){
-      // console.log(this.isjump())
       if(this.isjump()) {//跳跃
         if(this.frame_num >= 15){
           this.frame_num = 0
@@ -63,7 +55,6 @@ constructor(){
           this.frame_num = 0
         }
         this.image_src = this.down_image_list[this.frame_num]
-        // console.log("lieing!")
       }
       else {
         if(this.frame_num >= 8){//跑动
@@ -72,7 +63,7 @@ constructor(){
         this.image_src = this.running_image_list[this.frame_num]
       }
     } else {
-      if(this.frame_num >= 18){//死亡
+      if(this.frame_num >= 17){//死亡
         return
       }
       this.image_src = this.dead_image_list[this.frame_num]
@@ -80,11 +71,6 @@ constructor(){
     if(this.frame_num > 19){
       console.log("Err in draw_ani")
     }
-    // console.log(this.alive)
-    // console.log("width: " + this.width + " height: " + this.height)
-    // console.log("hello?")
-    // console.log(this)
-    // console.log(this.image_list[this.frame_num])
     this.frame_num ++
   }
 
@@ -92,9 +78,7 @@ constructor(){
     this.bind_draw = this.draw_ani.bind(this)
     if(!this.isplaying){
       this.isplaying = true
-      // console.log(this)
       this.interval_id = setInterval(this.bind_draw, 1000/30, context)
     }
-    // this.draw_ani(context)
   }
 }

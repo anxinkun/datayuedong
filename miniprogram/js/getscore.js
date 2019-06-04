@@ -7,7 +7,6 @@ wx.cloud.callFunction({
     }).get()
       .then(res => {
         // res.data 包含该记录的数据
-        console.log(res.data.score)
       })
   },
   fail: err => {

@@ -44,7 +44,6 @@ export default class Main {
   // 触摸监听
   event_listener(){
     wx.onTouchStart( ((e) => {
-      // console.log("start: ", move_x, move_y)
       move_x = []
       move_y = []
       this.jumper.is_action = true
@@ -60,10 +59,8 @@ export default class Main {
     }).bind(this) )
 
     wx.onTouchEnd( ((e) => {
-      console.log("touched end")
     }).bind(this) )
     wx.onTouchCancel(function(e){
-      // console.log("Cancel: ", e.touches)
     })
   }
 
@@ -85,11 +82,6 @@ export default class Main {
 
     // 清除上一局的动画
     cancelAnimationFrame(this.aniId);
-
-    // this.aniId = window.requestAnimationFrame(
-    //   this.bindLoop,
-    //   canvas
-    // )
     this.aniId = requestAnimationFrame(this.bindLoop)
   }
 
@@ -98,7 +90,6 @@ export default class Main {
     databus.enemys.forEach((item) => {
       if (item.y + 30 - (this.jumper.y + 50) < 40 && item.y + 30 - (this.jumper.y + 50) > -40){
         if (item.x + 30 - (this.jumper.x + 50) < 40 && item.x + 30 - (this.jumper.x + 50) > -40){
-          console.log("mayday! mayday!")
           this.jumper.alive = false
           wx.cloud.callFunction({
             name: 'add',
@@ -107,7 +98,6 @@ export default class Main {
               score: this.score
             },
             success: res => {
-              console.log(res)
             },
             fail: err => {
               console.error(err)
@@ -164,7 +154,6 @@ export default class Main {
     this.gameinfo.renderGameScore(context, this.score)
 
     if(!this.isstart){
-      // console.log("Now we begin to start it.")
       this.startgame.render_start_game(context)
       if(!this.has_start_event){
         this.has_start_event = true
@@ -190,7 +179,6 @@ export default class Main {
       let that = this
       if(!this.isdeading){
         this.isdeading = true
-        console.log("now begin dead animation!")
         setTimeout(function () {
           that.should_play = true
         }, 1000)
@@ -246,7 +234,6 @@ export default class Main {
     let y = e.touches[0].clientY
 
     let area = this.startgame.start_area
-    console.log(e)
     if (x >= area.start_x
       && x <= area.end_x
       && y >= area.start_y
@@ -277,7 +264,6 @@ export default class Main {
   //实现记分
   score_update_step(){
     this.score++
-    console.log(this.score)
   }
 
   socre_update(){
