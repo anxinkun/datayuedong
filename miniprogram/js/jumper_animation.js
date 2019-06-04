@@ -59,7 +59,7 @@ constructor(){
         }
         this.image_src = this.jump_image_list[this.frame_num]
       } else if(this.islied()) {//蹲伏
-        if(this.frame_num >= 7){
+        if(this.frame_num >= 20){
           this.frame_num = 0
         }
         this.image_src = this.down_image_list[this.frame_num]
@@ -73,7 +73,7 @@ constructor(){
       }
     } else {
       if(this.frame_num >= 18){//死亡
-        this.frame_num = 0
+        return
       }
       this.image_src = this.dead_image_list[this.frame_num]
     }
